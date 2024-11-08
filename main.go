@@ -15,7 +15,7 @@ func main() {
 	}
 
 	for i := 0; i < len(args); i++ {
-		if err := readImage; err != nil {
+		if err := readImage(); err != nil {
 			fmt.Printf("Impossible de charger l'image: %s\n", args[i])
 			os.Exit(1)
 		}
@@ -30,17 +30,69 @@ func main() {
 	reg[R_PC] = PC_START
 
 	for {
-		instr := memRead(reg[R_PC] + 1)
+		reg[R_PC]++
+		instr := memRead(reg[R_PC])
 		op := instr >> 12
 
 	inner:
 		switch op {
+		case OP_ADD:
+			Add(instr)
+			break inner
+		case OP_AND:
+			And(instr)
+			break inner
+		case OP_BR:
+			Branch(instr)
+			break inner
+		case OP_JMP:
+			Jump(instr)
+			break inner
+		case OP_JSR:
+			JumpToSubroutine(instr)
+			break inner
+		case OP_LD:
+			Load(instr)
+			break inner
+		case OP_LDI:
+			LoadIndirect(instr)
+			break inner
+		case OP_LDR:
+			LoadRegister(instr)
+			break inner
+		case OP_LEA:
+			LoadEffectiveAddress(instr)
+			break inner
+		case OP_NOT:
+			Not(instr)
+			break inner
+		case OP_ST:
+			Store(instr)
+			break inner
+		case OP_STI:
+			StoreIndirect(instr)
+			break inner
+		case OP_STR:
+			StoreRegister(instr)
+			break inner
+		case OP_TRAP:
+			ExecuteTrap(instr)
+			break inner
+		case OP_RTI:
+		case OP_RES:
+		default:
+			fmt.Printf("Opération non prise en charge")
+			os.Exit(1)
+			break inner
 		}
 	}
 }
 
-func memRead(instr uint16) uint16 {
+func memRead(address uint16) uint16 {
 	return 0
+}
+
+func writeMem(address uint16, value uint16) {
 }
 
 func readImage() error {

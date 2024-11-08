@@ -9,8 +9,8 @@ const (
 	R_R5
 	R_R6
 	R_R7
-	R_PC
-	R_COND
+	R_PC   // Contient l'adresse de la prochaine instruction à exécuter
+	R_COND // Donne des informations sur le calcul précédent
 	R_COUNT
 
 	OP_BR   uint16 = iota /* branch */
